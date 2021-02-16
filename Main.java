@@ -1,5 +1,6 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -29,6 +30,7 @@ public class Main extends Application {
     private int jugador1=0;
     private int jugador2=0;
     private Text Game_over;
+    private Text text2;
 
     @Override
     public void start(final Stage primaryStage) {
@@ -54,15 +56,19 @@ public class Main extends Application {
         text.relocate(580, 20);
         text.setFill(Color.BLUE);
 
-        Game_over=new Text("Game Over");
-        Game_over.setFont(new Font(100));
-        Game_over.relocate(500, 100);
-        Game_over.setFill(Color.BLUE);
+        text2=new Text("Pulsa espacio para comenzar");
+        text2.setFont(new Font(20));
+        text2.relocate(550, 100);
+        text2.setFill(Color.BLUE);
+
+
 
         canvas.getChildren().addAll(cercle);
         canvas.getChildren().addAll(text);
+        canvas.getChildren().addAll(text2);
         //canvas.getChildren().addAll(rectangle);
         //canvas.getChildren().addAll(rectangle2);
+
 
 
         final Timeline loop = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
@@ -148,7 +154,7 @@ public class Main extends Application {
                     if (alLimitDret){
                         System.out.println("El jugador 1 ha marcado");
                         deltaX *= -1;
-                        cercle.relocate(300-radi, 200-radi);
+                        cercle.relocate(600-radi, 400-radi);
                         jugador1++;
                         text.setText(jugador1 + "-" + jugador2);
                         try {
@@ -160,7 +166,7 @@ public class Main extends Application {
                     if (alLimitEsquerra){
                         System.out.println("El jugador 2 ha marcado");
                         deltaX *= -1;
-                        cercle.relocate(300-radi, 200-radi);
+                        cercle.relocate(600-radi, 400-radi);
                         jugador2++;
                         text.setText(jugador1 + "-" + jugador2);
                         try {
@@ -170,22 +176,22 @@ public class Main extends Application {
                         }
                     }
                 } else {
-                    canvas.getChildren().addAll(Game_over);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println("Game over");
-                    System.exit(1);
+                    Game_over=new Text("Game Over");
+                    Game_over.setFont(new Font(50));
+                    Game_over.relocate(450, 100);
+                    Game_over.setFill(Color.BLUE);
+                    canvas.getChildren().add(Game_over);
                 }
             }
         }));
 
         loop.setCycleCount(Timeline.INDEFINITE);
-        loop.play();
-        primaryStage.show();
+        //loop.play();
         canvas.requestFocus();canvas.setOnKeyPressed(e -> {
+            if (e.getCode().equals(KeyCode.SPACE)){
+                loop.play();
+                canvas.getChildren().remove(text2);
+            }
             switch (e.getCode()) {
                 case UP: Rectangle2.mouAmunt(); break;
                 case DOWN: Rectangle2.mouAbaix(); break;
@@ -195,6 +201,7 @@ public class Main extends Application {
         });
 
     }
+
 
     public static void main(String[] args) {
         launch(args);
